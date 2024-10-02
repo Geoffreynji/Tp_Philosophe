@@ -30,23 +30,28 @@ public class Philosopher extends Thread {
 
     @Override
     public void run() {
+        boolean BaguetteGauche = false;
+        boolean BaguetteDroite = false;
         while (running) {
             try {
                 think();
                 // Aléatoirement prendre la baguette de gauche puis de droite ou l'inverse
                 switch(new Random().nextInt(2)) {
                     case 0:
-                        myLeftStick.take();
+                        BaguetteGauche = myLeftStick.take();
                         think(); // pour augmenter la probabilité d'interblocage
-                        myRightStick.take();
+                        BaguetteDroite = myRightStick.take();
                         break;
                     case 1:
-                        myRightStick.take();
+                        BaguetteDroite = myRightStick.take();
                         think(); // pour augmenter la probabilité d'interblocage
-                        myLeftStick.take();
+                        BaguetteGauche = myLeftStick.take();
                 }
-                // Si on arrive ici, on a pu "take" les 2 baguettes
-                eat();
+                if(BaguetteDroite && BaguetteGauche)
+                {
+                    eat();
+                }
+            
                 // On libère les baguettes :
                 myLeftStick.release();
                 myRightStick.release();
